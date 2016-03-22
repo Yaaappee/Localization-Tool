@@ -3,6 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="18"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="Open" HorizontalAlignment="Left" Width="140"/>
+                <MenuItem Header="Save" HorizontalAlignment="Left" Width="140"/>
+                <MenuItem Header="Exit" HorizontalAlignment="Left" Width="140"/>
+            </MenuItem>
+            <MenuItem Header="Table">
+                <MenuItem Header="Add row" HorizontalAlignment="Left" Width="160"/>
+                <MenuItem Header="Delete row" HorizontalAlignment="Left" Width="160"/>
+                <MenuItem Header="Cleare table" HorizontalAlignment="Left" Width="160"/>
+            </MenuItem>
+            <MenuItem Header="Chose language">
+                <MenuItem Header="UA" HorizontalAlignment="Left" Width="140"/>
+                <MenuItem Header="EN" HorizontalAlignment="Left" Width="140"/>
+                <MenuItem Header="RU" HorizontalAlignment="Left" Width="140"/>
+            </MenuItem>
+            <MenuItem Header="Translate JSON (in future)"/>
+        </Menu>
+
     </Grid>
 </Window>
