@@ -2,14 +2,18 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:Localization_Tool"
-        Title="Localization Tool" Height="350" Width="525" FontSize="14">
+        Title="Localization Tool" Height="350" Width="525" FontSize="14" Closing="Close">
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static loc:MainWindow.StartServiceRoutedCmd}" 
-                    Executed="Add_Row" />
+        <CommandBinding Command="{x:Static loc:MainWindow.AddRowRoutedCmd}" Executed="Add_Row" />
+        <CommandBinding Command="{x:Static loc:MainWindow.ClearTableRoutedCmd}" Executed="Clear_Table" />
+        <CommandBinding Command="{x:Static loc:MainWindow.OpenJsonRoutedCmd}" Executed="Open_JSON" />
+        <CommandBinding Command="{x:Static loc:MainWindow.SaveAsJsonRoutedCmd}" Executed="Save_to_JSON" />
     </Window.CommandBindings>
-
     <Window.InputBindings>
-        <KeyBinding Command="loc:MainWindow.StartServiceRoutedCmd" Gesture="CTRL+N" />
+        <KeyBinding Command="loc:MainWindow.AddRowRoutedCmd" Gesture="CTRL+R" />
+        <KeyBinding Command="loc:MainWindow.ClearTableRoutedCmd" Gesture="CTRL+C" />
+        <KeyBinding Command="loc:MainWindow.OpenJsonRoutedCmd" Gesture="CTRL+O" />
+        <KeyBinding Command="loc:MainWindow.SaveAsJsonRoutedCmd" Gesture="CTRL+S" />
     </Window.InputBindings>
 
     <Grid>
@@ -19,23 +23,23 @@
         </Grid.RowDefinitions>
         <Menu FontSize="14">
             <MenuItem Header="File">
-                <MenuItem Header="Open" HorizontalAlignment="Left" Width="140"/>
-                <MenuItem Header="Save" HorizontalAlignment="Left" Width="140"/>
-                <MenuItem Header="Exit" HorizontalAlignment="Left" Width="140"/>
+                <MenuItem Header="Open" HorizontalAlignment="Left" Width="200" Click="Open_JSON" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="Save" HorizontalAlignment="Left" Width="200" Click="Save_to_JSON" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Exit" HorizontalAlignment="Left" Width="200" Click="Close"/>
             </MenuItem>
             <MenuItem Header="Table">
-                <MenuItem Header="_Add row" HorizontalAlignment="Left" Width="200" Click="Add_Row" InputGestureText="Ctrl+A"/>
+                <MenuItem Header="_Add row" HorizontalAlignment="Left" Width="200" Click="Add_Row" InputGestureText="Ctrl+R"/>
                 <MenuItem Header="Delete row" HorizontalAlignment="Left" Width="200" InputGestureText="Del"/>
-                <MenuItem Header="Cleare table" HorizontalAlignment="Left" Width="200" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="Clear table" HorizontalAlignment="Left" Width="200" Click="Clear_Table" InputGestureText="Ctrl+N"/>
             </MenuItem>
-            <MenuItem Header="Chose language">
+            <MenuItem Header="Chose language" Visibility="Collapsed">
                 <MenuItem Header="UA" HorizontalAlignment="Left" Width="140"/>
                 <MenuItem Header="EN" HorizontalAlignment="Left" Width="140"/>
                 <MenuItem Header="RU" HorizontalAlignment="Left" Width="140"/>
             </MenuItem>
             <MenuItem Header="Translate JSON (in future)"/>
 
-            
+
         </Menu>
         <DataGrid Margin="0" 
                   Grid.Row="1" 
@@ -44,7 +48,13 @@
                   Name="Table" 
                   ColumnWidth="*"
                   Loaded="DataGrid_Loaded"
-                  ItemsSource="{Binding}">
+                  ItemsSource="{Binding}"
+                  CanUserAddRows="True"
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            </DataGrid.Columns>
         </DataGrid>
 
     </Grid>
