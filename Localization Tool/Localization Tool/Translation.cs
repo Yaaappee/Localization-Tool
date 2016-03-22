@@ -1,8 +1,11 @@
-﻿namespace Localization_Tool
+﻿using System.ComponentModel;
+
+namespace Localization_Tool
 {
     public class Translation
     {
         public string Name { get; set; }
+
         public string Value { get; set; }
 
         public Translation(string name, string value)
