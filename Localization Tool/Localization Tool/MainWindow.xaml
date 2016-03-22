@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:Localization_Tool"
-        Title="Localization Tool" Height="350" Width="525" FontSize="14" Closing="Close">
+        Title="Localization Tool" Height="350" Width="525" FontSize="14" Closing="Close" Icon="icon.ico">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static loc:MainWindow.AddRowRoutedCmd}" Executed="Add_Row" />
         <CommandBinding Command="{x:Static loc:MainWindow.ClearTableRoutedCmd}" Executed="Clear_Table" />
