@@ -20,7 +20,6 @@ namespace Localization_Tool
         public static RoutedCommand OpenJsonRoutedCmd = new RoutedCommand();
         public static RoutedCommand SaveAsJsonRoutedCmd = new RoutedCommand();
 
-        private readonly Translation _emptyTranslation = new Translation("", "");
         public ObservableCollection<Translation> Translations { get; set; }
         private readonly SaveFileDialog _sf;
         private readonly OpenFileDialog _of;
@@ -32,7 +31,7 @@ namespace Localization_Tool
             InitializeComponent();
             Translations = new ObservableCollection<Translation>
             {
-                _emptyTranslation
+                new Translation("", "")
             };
             ReadJson(backUpFileName);
 
@@ -60,7 +59,7 @@ namespace Localization_Tool
 
         private void Add_Row(object sender, RoutedEventArgs e)
         {
-            Translations.Add(_emptyTranslation);
+            Translations.Add(new Translation("", ""));
         }
 
         private void Save_to_JSON(object sender, RoutedEventArgs e)
