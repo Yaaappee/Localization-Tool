@@ -37,7 +37,11 @@
                 <MenuItem Header="EN" HorizontalAlignment="Left" Width="140"/>
                 <MenuItem Header="RU" HorizontalAlignment="Left" Width="140"/>
             </MenuItem>
-            <MenuItem Header="Translate JSON (in future)"/>
+            <MenuItem Header="Translate JSON">
+                <MenuItem Header="UA" HorizontalAlignment="Left" Width="140" Click="Translate_to_UA"/>
+                <MenuItem Header="EN" HorizontalAlignment="Left" Width="140" Click="Translate_to_EN"/>
+                <MenuItem Header="RU" HorizontalAlignment="Left" Width="140" Click="Translate_to_RU"/>
+            </MenuItem>
 
 
         </Menu>

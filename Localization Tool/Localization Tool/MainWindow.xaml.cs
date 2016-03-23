@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -153,6 +154,42 @@ namespace Localization_Tool
         private void Clear_Table(object sender, RoutedEventArgs e)
         {
             Translations.Clear();
+        }
+
+
+        private void Translate(string lang)
+        {
+            WebClient webClient = new WebClient();
+            StringBuilder textToTranslate = new StringBuilder();
+            foreach (var translation in Translations)
+            {
+                textToTranslate.Append("&text=");
+                textToTranslate.Append(translation.Value);
+            }
+            webClient.Encoding = Encoding.UTF8;
+            var result = JObject.Parse(webClient.DownloadString("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20160322T103501Z.10b2b142f2f8bf7f.66c4f9f75232ede5cb9d8cc5ce17df5fd1d02d32&lang=" + lang + textToTranslate), new JsonLoadSettings(){});
+            
+            int i = 0;
+            foreach (var item in result.GetValue("text"))
+            {
+                Translations[i].Value = item.ToString();
+                i++;
+            }
+        }
+
+        private void Translate_to_UA(object sender, RoutedEventArgs e)
+        {
+            Translate("uk");
+        }
+
+        private void Translate_to_EN(object sender, RoutedEventArgs e)
+        {
+            Translate("en");
+        }
+
+        private void Translate_to_RU(object sender, RoutedEventArgs e)
+        {
+            Translate("ru");
         }
     }
 }
