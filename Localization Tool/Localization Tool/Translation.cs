@@ -7,58 +7,89 @@ namespace Localization_Tool
         private string _name;
         public string Name
         {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                CheckPropertyChanged("Name", ref _name, ref value);
-            }
+            get { return _name; }
+            set { CheckPropertyChanged("Name", ref _name, ref value); }
         }
 
-        private string _value;
-        public string Value
+        private string _uk;
+        public string UK
+        {
+            get { return _uk; }
+            set { CheckPropertyChanged("UK", ref _uk, ref value); }
+        }
+
+        private string _us;
+        public string US
+        {
+            get { return _us; }
+            set { CheckPropertyChanged("US", ref _us, ref value); }
+        }
+
+        private string _ru;
+        public string RU
+        {
+            get { return _ru; }
+            set { CheckPropertyChanged("RU", ref _ru, ref value); }
+        }
+
+        public string this[Lang index]
         {
             get
             {
-                return _value;
+                switch (index)
+                {
+                    case Lang.UK:
+                        return UK;
+                    case Lang.US:
+                        return US;
+                    case Lang.RU:
+                        return RU;
+                    default:
+                        return "";
+                }
             }
             set
             {
-                CheckPropertyChanged("Value", ref _value, ref value);
+                switch (index)
+                {
+                    case Lang.UK:
+                        UK = value;
+                        break;
+                    case Lang.US:
+                        US = value;
+                        break;
+                    case Lang.RU:
+                        RU = value;
+                        break;
+                }
             }
         }
 
-        public Translation(string name, string value)
+        public Translation()
+        {
+        }
+
+        public Translation(string name)
         {
             Name = name;
-            Value = value;
         }
     }
 
     public abstract class NotifyProperyChangedBase : INotifyPropertyChanged
     {
-        #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
-        #region methods
-        protected bool CheckPropertyChanged<T>
-        (string propertyName, ref T oldValue, ref T newValue)
+
+        protected bool CheckPropertyChanged<T>(string propertyName, ref T oldValue, ref T newValue)
         {
             if (oldValue == null && newValue == null)
             {
                 return false;
             }
 
-            if ((oldValue == null && newValue != null) || !oldValue.Equals((T)newValue))
-            {
-                oldValue = newValue;
-                FirePropertyChanged(propertyName);
-                return true;
-            }
-
-            return false;
+            if (oldValue == null || ((oldValue != null || newValue == null) && oldValue.Equals(newValue))) return false;
+            oldValue = newValue;
+            FirePropertyChanged(propertyName);
+            return true;
         }
 
         protected void FirePropertyChanged(string propertyName)
@@ -68,9 +99,6 @@ namespace Localization_Tool
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
-        #endregion
-
     }
 }
 
