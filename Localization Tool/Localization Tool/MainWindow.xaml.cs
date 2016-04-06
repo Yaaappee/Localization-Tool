@@ -133,44 +133,52 @@ namespace Localization_Tool
             Close();
         }
 
-        private void Translate(string sourceLang, string targetLang)
+        private void Translate(string sourceLanguage, string targetLanguage)
         {
-            Lang language = GetLang(targetLang);
+            Lang sourceLanguageEnum = GetLang(sourceLanguage);
+            Lang targetLanguageEnum = GetLang(targetLanguage); 
+            sourceLanguage = sourceLanguage == "us" ? "en" : sourceLanguage;
+            targetLanguage = targetLanguage == "us" ? "en" : targetLanguage;
             var webClient = new WebClient();
             var textToTranslate = new StringBuilder();
             foreach (var translation in Translations)
             {
                 textToTranslate.Append("&text=");
-                textToTranslate.Append(translation[language]);
+                textToTranslate.Append(translation[sourceLanguageEnum]);
             }
             webClient.Encoding = Encoding.UTF8;
-            var result = JObject.Parse(webClient.DownloadString(Url + targetLang + textToTranslate), new JsonLoadSettings() { });
+            var result = JObject.Parse(webClient.DownloadString(Url + sourceLanguage + "-" + targetLanguage + textToTranslate), new JsonLoadSettings() { });
 
             var i = 0;
             foreach (var item in result.GetValue("text"))
             {
-                Translations[i][language] = item.ToString();
+                Translations[i][targetLanguageEnum] = item.ToString();
                 i++;
             }
         }
 
         private void Translate_button(object sender, RoutedEventArgs e)
         {
-
+            string sourceLanguage = SourceLanguage.Text;
+            string targetLanguage = TargetLanguage.Text;
+            Translate(sourceLanguage, targetLanguage);
         }
 
         private Lang GetLang(string lang)
         {
             switch (lang)
             {
+                case "uk":
                 case "UK":
                 case "uk-UK":
                 case "uk-UK.json":
                     return Lang.UK;
+                case "us":
                 case "US":
                 case "en-Us":
                 case "en-Us.json":
                     return Lang.US;
+                case "ru":
                 case "RU":
                 case "ru-RU":
                 case "ru-RU.json":
@@ -194,24 +202,7 @@ namespace Localization_Tool
                     throw new Exception("Incorrect Lang in Method GetLang");
             }
         }
-        /*private string GetFileName(string lang)
-        {
-            switch (sourceLang)
-            {
-                case "UK":
-                case "uk-UK":
-                    return "uk-UK.json";
-                case "US":
-                case "en-Us":
-                    return "en-US.json";
-                case "RU":
-                case "ru-RU":
-                    return "ru-RU.json";
-                default:
-                    throw new Exception("Incorrect Lang in Method GetLang");
-            }
-        }*/
-
+       
         private string GetFileName(Lang lang)
         {
             switch (lang)
