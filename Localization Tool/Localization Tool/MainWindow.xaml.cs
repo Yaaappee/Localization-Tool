@@ -70,8 +70,9 @@ namespace Localization_Tool
             try
             {
                 var fileText = File.ReadAllText(fileName);
-                var o = JObject.Parse(fileText);
-                foreach (var element in o)
+                JObject file = JObject.Parse(fileText);
+                JObject translation = file.Value<JObject>(GetLang(language));
+                foreach (var element in translation)
                 {
                     int index = Contains(element.Key);
                     if (index == -1)
@@ -102,7 +103,9 @@ namespace Localization_Tool
         {
             RemoveEmptyRows();
             var result = new StringBuilder();
-            result.Append("{");
+            result.Append("{\"");
+            result.Append(GetLang(language));
+            result.Append("\":{");
             if (Translations.Count != 0)
             {
                 for (var i = 0; i < Translations.Count - 1; i++)
@@ -116,7 +119,7 @@ namespace Localization_Tool
                 result.Append(":");
                 result.Append("\"" + Translations[Translations.Count - 1][language] + "\"");
             }
-            result.Append("}");
+            result.Append("}}");
             return result.ToString();
         }
 
@@ -177,6 +180,20 @@ namespace Localization_Tool
             }
         }
 
+        private string GetLang(Lang lang)
+        {
+            switch (lang)
+            {
+                case Lang.UK:
+                    return "uk-UK";
+                case Lang.US:
+                    return "en-US";
+                case Lang.RU:
+                    return "ru-RU";
+                default:
+                    throw new Exception("Incorrect Lang in Method GetLang");
+            }
+        }
         /*private string GetFileName(string lang)
         {
             switch (sourceLang)
