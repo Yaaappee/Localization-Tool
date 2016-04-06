@@ -27,16 +27,8 @@ namespace Localization_Tool
         public MainWindow()
         {
             InitializeComponent();
-            Translations = new ObservableCollection<Translation>
-            {
-                new Translation()
-            };
-            DirectoryInfo d = new DirectoryInfo(Directory.GetCurrentDirectory());
 
-            foreach (FileInfo file in d.GetFiles("*.json"))
-            {
-                MessageBox.Show(file.Name);
-            }
+            Translations = new ObservableCollection<Translation>();
             foreach (Lang value in Enum.GetValues(typeof(Lang)))
             {
                 ReadJson(value);
@@ -55,23 +47,21 @@ namespace Localization_Tool
 
         private void Save_JSON(object sender, RoutedEventArgs e)
         {
-            //_sf.ShowDialog();
-
-            //if (_sf.FileName != "")
-            //{
-            //    File.WriteAllText(_sf.FileName, BuildJson());
-            //    MessageBox.Show("Saved");
-            //}
+            RemoveEmptyRows();
+            foreach (Lang value in Enum.GetValues(typeof(Lang)))
+            {
+                File.WriteAllText(GetFileName(value), BuildJson(value));
+            }
         }
 
         private void Open_JSON(object sender, RoutedEventArgs e)
         {
-            //_of.ShowDialog();
-            //if (_of.FileName != "")
-            //{
-            //    ReadJson(_of.FileName);
-            //    MessageBox.Show("Opened");
-            //}
+            Translations.Clear();
+            foreach (Lang value in Enum.GetValues(typeof(Lang)))
+            {
+                ReadJson(value);
+            }
+            RemoveEmptyRows();
         }
 
         private void ReadJson(Lang language)
@@ -81,12 +71,19 @@ namespace Localization_Tool
             {
                 var fileText = File.ReadAllText(fileName);
                 var o = JObject.Parse(fileText);
-                Translations.Clear();
                 foreach (var element in o)
                 {
-                    Translation line = new Translation(element.Key);
-                    line[language] = element.Value.ToString();
-                    Translations.Add(line);
+                    int index = Contains(element.Key);
+                    if (index == -1)
+                    {
+                        Translation line = new Translation(element.Key);
+                        line[language] = element.Value.ToString();
+                        Translations.Add(line);
+                    }
+                    else
+                    {
+                        Translations[index][language] = element.Value.ToString();
+                    }
                 }
             }
             catch (JsonReaderException jsonEx)
@@ -95,21 +92,10 @@ namespace Localization_Tool
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                //if (fileName != BackUpFileName)
-                    MessageBox.Show("Файл отсутствует\n" + fileNotFoundException.Message);
-
+                MessageBox.Show("Файл отсутствует\n" + fileNotFoundException.Message + "\n" +
+                                "При сохранении создастся автоматически");
             }
             catch (Exception ex) { MessageBox.Show("Неизвестная ошибка\n" + ex.Message); }
-        }
-
-        private void Close(object sender, RoutedEventArgs e)
-        {
-            RemoveEmptyRows();
-            foreach (Lang value in Enum.GetValues(typeof(Lang)))
-            {
-                File.WriteAllText(GetFileName(value), BuildJson(value));
-            }
-            Close();
         }
 
         private string BuildJson(Lang language)
@@ -134,32 +120,19 @@ namespace Localization_Tool
             return result.ToString();
         }
 
-        private void Close(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            RemoveEmptyRows(); 
-            foreach (Lang value in Enum.GetValues(typeof(Lang)))
-            {
-                File.WriteAllText(GetFileName(value), BuildJson(value));
-            }
-        }
-
-        private void RemoveEmptyRows()
-        {
-            for (var i = 0; i < Translations.Count; i++)
-            {
-                if (string.IsNullOrWhiteSpace(Translations[i].Name))
-                    Translations.Remove(Translations[i]);
-            }
-        }
-
         private void Clear_Table(object sender, RoutedEventArgs e)
         {
             Translations.Clear();
         }
 
-        private void Translate(string lang)
+        private void Close(object sender, RoutedEventArgs e)
         {
-            Lang language = GetLang(lang);
+            Close();
+        }
+
+        private void Translate(string sourceLang, string targetLang)
+        {
+            Lang language = GetLang(targetLang);
             var webClient = new WebClient();
             var textToTranslate = new StringBuilder();
             foreach (var translation in Translations)
@@ -168,7 +141,7 @@ namespace Localization_Tool
                 textToTranslate.Append(translation[language]);
             }
             webClient.Encoding = Encoding.UTF8;
-            var result = JObject.Parse(webClient.DownloadString(Url + lang + textToTranslate), new JsonLoadSettings() { });
+            var result = JObject.Parse(webClient.DownloadString(Url + targetLang + textToTranslate), new JsonLoadSettings() { });
 
             var i = 0;
             foreach (var item in result.GetValue("text"))
@@ -178,35 +151,49 @@ namespace Localization_Tool
             }
         }
 
+        private void Translate_button(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private Lang GetLang(string lang)
         {
             switch (lang)
             {
                 case "UK":
+                case "uk-UK":
+                case "uk-UK.json":
                     return Lang.UK;
                 case "US":
+                case "en-Us":
+                case "en-Us.json":
                     return Lang.US;
                 case "RU":
+                case "ru-RU":
+                case "ru-RU.json":
                     return Lang.RU;
                 default:
                     throw new Exception("Incorrect Lang in Method GetLang");
             }
         }
 
-        private string GetFileName(string lang)
+        /*private string GetFileName(string lang)
         {
-            switch (lang)
+            switch (sourceLang)
             {
                 case "UK":
+                case "uk-UK":
                     return "uk-UK.json";
                 case "US":
+                case "en-Us":
                     return "en-US.json";
                 case "RU":
+                case "ru-RU":
                     return "ru-RU.json";
                 default:
                     throw new Exception("Incorrect Lang in Method GetLang");
             }
-        }
+        }*/
 
         private string GetFileName(Lang lang)
         {
@@ -222,27 +209,7 @@ namespace Localization_Tool
                     throw new Exception("Incorrect Lang in Method GetLang");
             }
         }
-
-        private void Translate_to_UA(object sender, RoutedEventArgs e)
-        {
-            Translate("uk");
-        }
-
-        private void Translate_to_EN(object sender, RoutedEventArgs e)
-        {
-            Translate("en");
-        }
-
-        private void Translate_to_RU(object sender, RoutedEventArgs e)
-        {
-            Translate("ru");
-        }
-
-        private void Translate_button(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+        
         private void LanguageChange(object sender, RoutedEventArgs e)
         {
             CheckBox cb = (CheckBox)sender;
@@ -252,6 +219,25 @@ namespace Localization_Tool
                 {
                     column.Visibility = column.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
                 }
+            }
+        }
+
+        private int Contains(string key)
+        {
+            for (int i = 0; i < Translations.Count; i++)
+            {
+                if (Translations[i].Name == key)
+                    return i;
+            }
+            return -1;
+        }
+
+        private void RemoveEmptyRows()
+        {
+            for (var i = 0; i < Translations.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(Translations[i].Name))
+                    Translations.Remove(Translations[i--]);
             }
         }
     }

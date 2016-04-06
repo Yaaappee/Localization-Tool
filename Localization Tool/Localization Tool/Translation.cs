@@ -86,10 +86,14 @@ namespace Localization_Tool
                 return false;
             }
 
-            if (oldValue == null || ((oldValue != null || newValue == null) && oldValue.Equals(newValue))) return false;
-            oldValue = newValue;
-            FirePropertyChanged(propertyName);
-            return true;
+            if ((oldValue == null && newValue != null) || !oldValue.Equals((T)newValue))
+            {
+                oldValue = newValue;
+                FirePropertyChanged(propertyName);
+                return true;
+            }
+
+            return false;
         }
 
         protected void FirePropertyChanged(string propertyName)
