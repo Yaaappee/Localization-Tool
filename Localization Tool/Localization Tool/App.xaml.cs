@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Localization_Tool
+namespace LocalizationTool
 {
     /// <summary>
     /// Interaction logic for App.xaml

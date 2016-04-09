@@ -1,13 +1,13 @@
-﻿<Window x:Class="Localization_Tool.MainWindow"
+﻿<Window x:Class="LocalizationTool.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:loc="clr-namespace:Localization_Tool"
+        xmlns:loc="clr-namespace:LocalizationTool"
         Title="Localization Tool" Height="400" Width="732" FontSize="14" Icon="icon.ico" MinHeight="400">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static loc:MainWindow.AddRowRoutedCmd}" Executed="Add_Row" />
         <CommandBinding Command="{x:Static loc:MainWindow.ClearTableRoutedCmd}" Executed="Clear_Table" />
-        <CommandBinding Command="{x:Static loc:MainWindow.OpenJsonRoutedCmd}" Executed="Open_JSON" />
-        <CommandBinding Command="{x:Static loc:MainWindow.SaveAsJsonRoutedCmd}" Executed="Save_JSON" />
+        <CommandBinding Command="{x:Static loc:MainWindow.OpenJsonRoutedCmd}" Executed="Open_Json" />
+        <CommandBinding Command="{x:Static loc:MainWindow.SaveAsJsonRoutedCmd}" Executed="Save_Json" />
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Command="loc:MainWindow.AddRowRoutedCmd" Gesture="CTRL+R" />
@@ -27,8 +27,8 @@
         </Grid.RowDefinitions>
         <Menu FontSize="14" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="Open" HorizontalAlignment="Left" Width="200" Click="Open_JSON" InputGestureText="Ctrl+O"/>
-                <MenuItem Header="Save" HorizontalAlignment="Left" Width="200" Click="Save_JSON" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Open" HorizontalAlignment="Left" Width="200" Click="Open_Json" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="Save" HorizontalAlignment="Left" Width="200" Click="Save_Json" InputGestureText="Ctrl+S"/>
                 <MenuItem Header="Exit" HorizontalAlignment="Left" Width="200" Click="Close"/>
             </MenuItem>
             <MenuItem Header="Table">
@@ -76,17 +76,17 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Label Content="UK" Margin="6,6,3,6"/>
-            <CheckBox Name="UK" Content="&#xA;" Grid.Row="0" Grid.Column="1" Margin="31,10,32,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="LanguageChange" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox Name="Uk" Content="&#xA;" Grid.Row="0" Grid.Column="1" Margin="31,10,32,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="LanguageChange" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Label Content="US" Margin="6,6,3,6" Grid.Row="1" Grid.Column="0" />
-            <CheckBox Name="US" Content="&#xA;" Grid.Column="1" Margin="31,10,32,10" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="LanguageChange" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox Name="Us" Content="&#xA;" Grid.Column="1" Margin="31,10,32,10" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="LanguageChange" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Label Content="RU" Margin="6,6,3,6" Grid.Row="2" Grid.Column="0" />
-            <CheckBox Name="RU" Content="&#xD;&#xA;" Grid.Column="1" Margin="31,10,32,10" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="LanguageChange" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox Name="Ru" Content="&#xD;&#xA;" Grid.Column="1" Margin="31,10,32,10" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="LanguageChange" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Label Content="Translation" Margin="6" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0"
                    HorizontalContentAlignment="Center"/>
             <Label Content="Source language" Grid.Row="4" Grid.Column="0" Margin="6,6,3,6"/>
             <Label Content="Target language" Grid.Row="5" Grid.Column="0" Margin="6,6,3,6"/>
             <Button Content="Translate" Margin="6" Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="0"
-                    Click="Translate_button"/>
+                    Click="Translate_Button"/>
             <ComboBox Name="SourceLanguage" Grid.Column="1" Margin="3,6,6,6" Grid.Row="4" SelectedIndex="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                 <TextBlock>uk</TextBlock>
                 <TextBlock>us</TextBlock>

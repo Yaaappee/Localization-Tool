@@ -1,9 +1,9 @@
-﻿namespace Localization_Tool
+﻿namespace LocalizationTool
 {
     public enum Lang
     {
-        UK,
-        US,
-        RU
+        Uk,
+        Us,
+        Ru
     }
 }

@@ -1,32 +1,43 @@
-﻿using System.ComponentModel;
-
-namespace Localization_Tool
+﻿namespace LocalizationTool
 {
     public class Translation : NotifyProperyChangedBase
     {
         private string _name;
+
+        private string _ru;
+
+        private string _uk;
+
+        private string _us;
+
+        public Translation()
+        {
+        }
+
+        public Translation(string name)
+        {
+            Name = name;
+        }
+
         public string Name
         {
             get { return _name; }
             set { CheckPropertyChanged("Name", ref _name, ref value); }
         }
 
-        private string _uk;
-        public string UK
+        public string Uk
         {
             get { return _uk; }
             set { CheckPropertyChanged("UK", ref _uk, ref value); }
         }
 
-        private string _us;
-        public string US
+        public string Us
         {
             get { return _us; }
             set { CheckPropertyChanged("US", ref _us, ref value); }
         }
 
-        private string _ru;
-        public string RU
+        public string Ru
         {
             get { return _ru; }
             set { CheckPropertyChanged("RU", ref _ru, ref value); }
@@ -38,71 +49,32 @@ namespace Localization_Tool
             {
                 switch (index)
                 {
-                    case Lang.UK:
-                        return UK;
-                    case Lang.US:
-                        return US;
-                    case Lang.RU:
-                        return RU;
+                    case Lang.Uk:
+                        return Uk;
+                    case Lang.Us:
+                        return Us;
+                    case Lang.Ru:
+                        return Ru;
                     default:
-                        return "";
+                        return string.Empty;
                 }
             }
+
             set
             {
                 switch (index)
                 {
-                    case Lang.UK:
-                        UK = value;
+                    case Lang.Uk:
+                        Uk = value;
                         break;
-                    case Lang.US:
-                        US = value;
+                    case Lang.Us:
+                        Us = value;
                         break;
-                    case Lang.RU:
-                        RU = value;
+                    case Lang.Ru:
+                        Ru = value;
                         break;
                 }
             }
         }
-
-        public Translation()
-        {
-        }
-
-        public Translation(string name)
-        {
-            Name = name;
-        }
-    }
-
-    public abstract class NotifyProperyChangedBase : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected bool CheckPropertyChanged<T>(string propertyName, ref T oldValue, ref T newValue)
-        {
-            if (oldValue == null && newValue == null)
-            {
-                return false;
-            }
-
-            if ((oldValue == null && newValue != null) || !oldValue.Equals((T)newValue))
-            {
-                oldValue = newValue;
-                FirePropertyChanged(propertyName);
-                return true;
-            }
-
-            return false;
-        }
-
-        protected void FirePropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
     }
 }
-
