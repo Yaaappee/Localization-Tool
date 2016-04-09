@@ -61,9 +61,9 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </ApplicationDefinition>
     <Compile Include="HotKeyCommands.cs" />
-    <Compile Include="Language.cs" />
-    <Compile Include="NotifyProperyChangedBase.cs" />
-    <Compile Include="Translation.cs" />
+    <Compile Include="Translate\Language.cs" />
+    <Compile Include="Translate\NotifyProperyChangedBase.cs" />
+    <Compile Include="Translate\Translation.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -28,19 +28,19 @@
         public string Uk
         {
             get { return _uk; }
-            set { CheckPropertyChanged("UK", ref _uk, ref value); }
+            set { CheckPropertyChanged("Uk", ref _uk, ref value); }
         }
 
         public string Us
         {
             get { return _us; }
-            set { CheckPropertyChanged("US", ref _us, ref value); }
+            set { CheckPropertyChanged("Us", ref _us, ref value); }
         }
 
         public string Ru
         {
             get { return _ru; }
-            set { CheckPropertyChanged("RU", ref _ru, ref value); }
+            set { CheckPropertyChanged("Ru", ref _ru, ref value); }
         }
 
         public string this[Lang index]
