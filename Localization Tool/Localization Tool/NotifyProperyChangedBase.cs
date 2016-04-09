@@ -13,7 +13,7 @@ namespace LocalizationTool
                 return false;
             }
 
-            if ((oldValue == null && newValue != null) || !oldValue.Equals(newValue))
+            if ((oldValue == null && newValue != null) || (oldValue != null && !oldValue.Equals(newValue)))
             {
                 oldValue = newValue;
                 FirePropertyChanged(propertyName);

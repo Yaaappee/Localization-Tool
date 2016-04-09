@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
@@ -16,13 +17,10 @@ namespace LocalizationTool
     /// </summary>
     public partial class MainWindow : Window
     {
-        public const string Url =
-            "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20160322T103501Z.10b2b142f2f8bf7f.66c4f9f75232ede5cb9d8cc5ce17df5fd1d02d32&lang=";
-
-        public static RoutedCommand AddRowRoutedCmd = new RoutedCommand();
-        public static RoutedCommand ClearTableRoutedCmd = new RoutedCommand();
-        public static RoutedCommand OpenJsonRoutedCmd = new RoutedCommand();
-        public static RoutedCommand SaveAsJsonRoutedCmd = new RoutedCommand();
+        public const string YandexTranslateApiUrl =
+            "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
+            "key=trnsl.1.1.20160322T103501Z.10b2b142f2f8bf7f.66c4f9f75232ede5cb9d8cc5ce17df5fd1d02d32&" +
+            "lang=";
 
         public MainWindow()
         {
@@ -75,34 +73,43 @@ namespace LocalizationTool
                 var fileText = File.ReadAllText(fileName);
                 var file = JObject.Parse(fileText);
                 var translation = file.Value<JObject>(GetLang(language));
-                foreach (var element in translation)
-                {
-                    var index = Contains(element.Key);
-                    if (index == -1)
-                    {
-                        var line = new Translation(element.Key);
-                        line[language] = element.Value.ToString();
-                        Translations.Add(line);
-                    }
-                    else
-                    {
-                        Translations[index][language] = element.Value.ToString();
-                    }
-                }
+                IterateJsonArray(language, translation);
             }
             catch (JsonReaderException jsonEx)
             {
-                MessageBox.Show("Неверный формат json\n" + jsonEx.Message);
+                MessageBox.Show("Incorrect json format\n" + jsonEx.Message);
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                MessageBox.Show("Файл отсутствует\n" + fileNotFoundException.Message + "\n" +
-                                "При сохранении создастся автоматически");
+                MessageBox.Show("File is missing\n" + fileNotFoundException.Message);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Неизвестная ошибка\n" + ex.Message);
+                MessageBox.Show("Unknown error\n" + ex.Message);
             }
+        }
+
+        private void IterateJsonArray(Lang language, JObject translation)
+        {
+            foreach (var element in translation)
+            {
+                var index = Contains(element.Key);
+                if (index == -1)
+                {
+                    AddNewLineToTranslation(language, element);
+                }
+                else
+                {
+                    Translations[index][language] = element.Value.ToString();
+                }
+            }
+        }
+
+        private void AddNewLineToTranslation(Lang language, KeyValuePair<string, JToken> element)
+        {
+            var line = new Translation(element.Key);
+            line[language] = element.Value.ToString();
+            Translations.Add(line);
         }
 
         private string BuildJson(Lang language)
@@ -162,7 +169,7 @@ namespace LocalizationTool
 
             webClient.Encoding = Encoding.UTF8;
             var result =
-                JObject.Parse(webClient.DownloadString(Url + sourceLanguage + "-" + targetLanguage + textToTranslate));
+                JObject.Parse(webClient.DownloadString(YandexTranslateApiUrl + sourceLanguage + "-" + targetLanguage + textToTranslate));
 
             var i = 0;
             foreach (var item in result.GetValue("text"))
